@@ -413,6 +413,7 @@ function buildUI(thisObj) {
                         dayText: StaticText {text:'Day of the Week', alignment: ['left','center']}, \
                         dayOption: DropDownList {text:'PM',alignment: ['fill','center']}, \
                         dayShort: Checkbox {text:'Short', alignment: ['right','center']}, \
+                        dayFlat: Checkbox {text:'Flat', alignment: ['right','center']}, \
                         } \
                     } \
         tuneindate: Group { \
@@ -458,6 +459,9 @@ function buildUI(thisObj) {
         myPal.debug_width  = myPal.comp.layer("debug.width");
         myPal.debug_width_2 = myPal.comp.layer("debug.width 2");
         myPal.ctrl_info = myPal.comp.layer("CTRL_Info");
+        
+        //hackish... turn off the position offset.
+        myPal.day_layer("Text")("Animators")("smaller")("Properties")("Position").setValue([0,0]);
        
        myPal.avatar_layers = 
        {
@@ -788,6 +792,17 @@ function buildUI(thisObj) {
             var isEvent = myPal.grp.title.title.isEvent.value;
             myPal.applyEvent( isEvent );
         }
+        myPal.updateFlat = function(){
+            var isFlat;
+            
+            if ( myPal.grp.opt.dateSelected.value ){
+                isFlat = myPal.grp.tunein.day.dayFlat.value;
+            }
+            else{
+                isFlat = false;
+            }
+            myPal.applyFlat( );
+        }
         myPal.updateExtra = function(){
             if (!myPal.grp.opt.extraSelected.value){
             }
@@ -864,7 +879,8 @@ function buildUI(thisObj) {
         myPal.updateText = function(){
             
             myPal.updateFont( myPal.grp.opt.dateSelected.value );
-            
+            //AQUI
+            /*
             if( myPal.grp.opt.dateSelected.value ){
                 myPal.ctrl_day_layer("Effects")("extrude_mult")("Slider").setValue(0);
             }
@@ -872,6 +888,7 @@ function buildUI(thisObj) {
             {
                 myPal.ctrl_day_layer("Effects")("extrude_mult")("Slider").setValue(100);                
             }
+            */
         }
         
         myPal.updateVisibility = function(){
@@ -888,6 +905,7 @@ function buildUI(thisObj) {
             myPal.updateNumAvatarOptions();
             myPal.updateTitle();
             myPal.updateEvent();
+            myPal.updateFlat();
             myPal.updateTitleBar();
             myPal.updateTime();
             myPal.updateDay();
@@ -936,7 +954,29 @@ function buildUI(thisObj) {
             
             myPal.title_layer("Effects")("---------------").enabled = isEvent;
             app.endUndoGroup();
-        }       
+        }
+        myPal.applyFlat = function( )
+        {
+            var isFlat = myPal.grp.tunein.day.dayFlat.value && myPal.grp.opt.dateSelected.value ;
+            
+            if ( isFlat == undefined ){
+                isFlat = false;
+            }
+            
+            app.beginUndoGroup("applyFlatness");
+            
+            //myPal.day_layer("Text")("Animators")("extrusion").enabled = isFlat;
+            
+            var s = "Do Not Touch";
+            
+            for (var i = 0 ; i < 5 ; i++ ){
+                myPal.day_layer("Effects")(s).enabled = !isFlat;
+                s+="-";
+            }
+            
+            myPal.day_layer("Effects")("---------------").enabled = isFlat;
+            app.endUndoGroup();
+        }      
         myPal.applyExtra = function( s ){
             app.beginUndoGroup("applyExtra");
             myPal.extra_layer.sourceText.setValue( s );
@@ -1041,13 +1081,15 @@ function buildUI(thisObj) {
        
         //set initial visibility options
 
-        myPal.grp.title.title.isEvent.value = myPal.grp.tuneindate.enabled = myPal.grp.tunein.day.dayShort.enabled = myPal.grp.extra.enabled = false;
+        myPal.grp.title.title.isEvent.value = myPal.grp.tuneindate.enabled = myPal.grp.tunein.day.dayFlat.enabled = myPal.grp.tunein.day.dayShort.enabled = myPal.grp.extra.enabled = false;
         
         // control possible options
 
         myPal.grp.opt.dateSelected.onClick = function(){ 
-            myPal.grp.tuneindate.enabled = this.value;
-            myPal.grp.tunein.day.dayShort.enabled= this.value; 
+            var dateSelected = this.value
+            
+            myPal.grp.tuneindate.enabled = myPal.grp.tunein.day.dayFlat.enabled = myPal.grp.tunein.day.dayShort.enabled =  dateSelected; 
+   
             //myPal.comp.layer("")
             myPal.updateAll();
             }
@@ -1070,6 +1112,10 @@ function buildUI(thisObj) {
             
             myPal.grp.title.title.titleText.text = value;
             
+            myPal.updateAll();
+        }
+        myPal.grp.tunein.day.dayFlat.onClick = function(){
+                        
             myPal.updateAll();
         }
         //Assign Methods to UI
