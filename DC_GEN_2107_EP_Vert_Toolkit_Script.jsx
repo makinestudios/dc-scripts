@@ -398,7 +398,7 @@ function buildUI(thisObj) {
        
        //hackish... turn off the position offset.
         myPal.day_layer("Text")("Animators")("smaller")("Properties")("Position").setValue([0,0]);
-        myPal.day_layer.transform.position.setValue([-12,23.5]);
+        //myPal.day_layer.transform.position.setValue([-12,23.5]);
         
        myPal.extra_layers  = [
             myPal.comp.layer("EXTRA"),
