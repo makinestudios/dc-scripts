@@ -459,10 +459,12 @@ function buildUI(thisObj) {
         myPal.debug_width  = myPal.comp.layer("debug.width");
         myPal.debug_width_2 = myPal.comp.layer("debug.width 2");
         myPal.ctrl_info = myPal.comp.layer("CTRL_Info");
+        myPal.disney_logo_extra_bar = myPal.comp.layer("bubble_disney_logo_extra");
         
         //hackish... turn off the position offset.
         myPal.day_layer("Text")("Animators")("smaller")("Properties")("Position").setValue([0,0]);
-       
+        //fix disney bubble logo size.
+        myPal.disney_logo_extra_bar("Contents")("Rounder")("Contents")("rectangle_Animation 2")("Size").setValue([245,137.4]);
        myPal.avatar_layers = 
        {
            a1: [ 
