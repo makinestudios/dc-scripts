@@ -13,8 +13,8 @@
 // 
 ////////////////////////////////////////////////////////////////////////
 
-var tcd_scriptName = "MAkinE - Disney GEN EP Customizer ";
-var tcd_version = "0.2";
+var tcd_scriptName = "MAkinE - Disney GEN EP Flex Customizer ";
+var tcd_version = "0.4";
 
 /////////////////////////////Array.indexOf for older JS/////////////////////
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
@@ -174,7 +174,7 @@ function genSocialCode(){
     return value;
 }
 function genDateCode(){
-    if ( !myPalette.grp.opt.dateSelected ){
+    if ( !myPalette.grp.opt.dateSelected.value ){
         return "";
     }
     
@@ -182,7 +182,7 @@ function genDateCode(){
     return value
 }
 function genTimeCode(){
-    if ( !myPalette.grp.opt.timeSelected ){
+    if ( !myPalette.grp.opt.timeSelected.value ){
         return "";
     }
     value = myPalette.grp.time.time.timeString.text.replace(":",".");
@@ -567,7 +567,6 @@ function buildUI(thisObj) {
         
         
         myPal.updateText = function(){
-            
             myPal.updateFont( myPal.grp.tune_in.opt.dateSmall.value );
             /*
             if( myPal.grp.opt.dateSelected.value ){
@@ -796,6 +795,7 @@ function buildUI(thisObj) {
         myPal.layout.layout(true);
         myPal.layout.resize();
         myPal.onResizing = myPal.onResize = function () {this.layout.resize();}
+        myPal.updateAll();
          
         } //if (myPal != null)
     return myPal;
